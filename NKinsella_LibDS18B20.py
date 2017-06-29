@@ -19,7 +19,7 @@ import time
 class thermometer_generic(object):
 
 
-	def __init__():
+	def __init__(self):
 		os.system('modprobe w1-gpio')
 		os.system('modprobe w1-therm')
 
@@ -56,35 +56,17 @@ class thermometer_generic(object):
 #	known DS18B20 sensors						#
 #################################################
 
-class thermometer1(object):
+class thermometer1(thermometer_generic):
 
 
-	os.system('modprobe w1-gpio')
-	os.system('modprobe w1-therm')
+	def __init__(self):
+		super().__init__()
 
-	base_dir = '/sys/bus/w1/devices/'
-	device_folder = glob.glob(base_dir + '28-0000068adbbb')[0]
-	device_file = device_folder + '/w1_slave'
-
+		device_folder = glob.glob(base_dir + '28-0000068adbbb')[0]
+		device_file = device_folder + '/w1_slave'
 
 
-	def read_temp_raw(self):
-		f = open(self.device_file,'r')
-		lines = f.readlines()
-		f.close()
-		return lines
 
-	def read_temp(self):
-		lines = self.read_temp_raw()
-		while lines[0].strip()[-3:]!='YES':
-			time.sleep(0.2)
-			lines = self.read_temp_raw()
-		equals_pos = lines[1].find('t=')
-		if equals_pos !=-1:
-			temp_string = lines[1][equals_pos+2:]
-			temp = float(temp_string)/1000.0
-			temp = round(temp,1)
-			return temp
 
 
 
